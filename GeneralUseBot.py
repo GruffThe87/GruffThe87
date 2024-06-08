@@ -4,18 +4,17 @@ import asyncio
 from discord.ext import commands
 from discord.ext.commands import has_permissions, MissingPermissions
 
-# Load the bot token from token.txt
+# Bot token from token.txt
 with open("token.txt", "r") as token_file:
     TOKEN = token_file.read().strip()
 
-# Define the intents
 intents = discord.Intents.default()
 intents.message_content = True
 intents.guilds = True
 intents.members = True
 intents.messages = True
 
-# Custom command prefix function to make commands case-insensitive
+# Prefixes
 def custom_prefix(bot, message):
     prefixes = ['!', '/']  # List of acceptable prefixes
     content = message.content.lower()  # Convert message content to lowercase
@@ -24,22 +23,19 @@ def custom_prefix(bot, message):
             return prefix
     return None
 
-# Define the bot with custom prefix and intents
 bot = commands.Bot(command_prefix=custom_prefix, intents=intents)
 
-# Event when the bot is ready to be used
 @bot.event
 async def on_ready():
     await bot.tree.sync()  # Sync slash commands with Discord
     print(f'Logged in as {bot.user.name} ({bot.user.id})')
     print('BOT ONLINE!')
 
-# Simple command that responds with "Hello!"
 @bot.command(aliases=["Hi", "hi", "Hey", "hey", "Hello"])
 async def hello(ctx):
     await ctx.send(f"Hello, {ctx.author.mention}!")
 
-# Command to say Good Morning
+# Good Morning
 @bot.command(aliases=["GM", "gm", "Morning", "morning", "Goodmorning", "goodmorning"])
 async def good_morning(ctx):
     await ctx.send(f"Good Morning, {ctx.author.mention}!")
@@ -79,7 +75,7 @@ async def golden(ctx):
     if your_user: 
         await your_user.send(f"{user.mention} Gruff is awesome!")
 
-# SLASH COMMANDS?
+# SLASH COMMANDS
 
 # Ping & Pong
 @bot.hybrid_command(aliases=["Ping"])
@@ -310,7 +306,7 @@ async def rps(ctx, user_choice: str):
 
     await ctx.send(result)
 
-# Help command to list all available commands
+# Commands
 @bot.command(aliases=["Commands", "CMD", "cmd", "Command", "command"])
 async def commands(ctx):
     embed = discord.Embed(title="All the commands", description="List of available commands:", color=0x00ff00)
@@ -332,6 +328,5 @@ async def commands(ctx):
     embed.add_field(name="/Sync", value="Responds with Syncing...", inline=False)
     embed.add_field(name="/Joke", value="Tells you a random joke from the database", inline=False)
     await ctx.send(embed=embed)
-
-# Run the bot with the specified token
+    
 bot.run(TOKEN)
